@@ -1,0 +1,31 @@
+---
+title: "Capstone"
+author: "Simrita Gopalan"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+source("Capstone.R")
+```
+
+# Objective
+
+I wish to find out what the trends arise between Gender, Race, and Economic Context. Gender Inequality Index by GIANINA-MARIA PETRAȘCU on Kaggle for this project.
+
+### Hypothesis
+
+My hypothesis is that men have records of going into second education more than other genders, and that the Rank correlated positively with the amount of women going into secondary education. This is based on my previous knowledge on intersectionality and discrimination.
+
+### Results
+
+After making a table that housed the overall mean of the percentage of Male Secondary Education and Female Secondary Education, I plotted it,
+shown here:
+
+```{r plot, echo=TRUE}
+plot(avg_sec_edu)
+```
