@@ -1,0 +1,37 @@
+# Loading packages
+library(tidyverse)
+
+# Uploading the dataset
+gen_stats_df <- read_csv("Gender_Inequality_Index.csv")
+
+# Creating new dataset with only the Country, 
+# Human Development, Rank, Female Secondary Education, 
+# and Male Secondary Education.
+trimmed_gen_stats <- gen_stats_df %>%
+  select(Country, Human_development, Rank, F_secondary_educ, M_secondary_educ)
+
+# Renaming a few columns to make them smaller
+trimmed_gen_stats <- trimmed_gen_stats %>%
+  rename(
+    M_sec_educ = M_secondary_educ,
+    F_sec_educ = F_secondary_educ,
+    Human_dev = Human_development
+  )
+
+# Making a table which shows the means (averages) of 
+# Female and Male Secondary Education.
+avg_f_sec_edu <- mean(trimmed_gen_stats$F_sec_educ, na.rm = TRUE)
+avg_m_sec_edu <- mean(trimmed_gen_stats$M_sec_educ, na.rm = TRUE)
+summary_sec_edu <- c(avg_f_sec_edu, avg_m_sec_edu)
+summary_sec_edu <- as.data.frame(summary_sec_edu)
+summary_sec_edu$Sex <- c("Female", "Male")
+colnames(summary_sec_edu) <- c("Sec_Edu", "Sex")
+rownames(summary_sec_edu) <- c(1, 2)
+
+#plotting mean
+avg_sec_edu <- ggplot(data = summary_sec_edu, aes(x = Sex, y = Sec_Edu)) +
+  geom_point(mapping = aes(color = Sex)) +
+  labs(title = "Averages of Female and Male Secondary Education Worldwide",
+       caption = "Female: 62.71, Male: 67.07") +
+  ylab("Secondary Education Rate")
+avg_sec_edu
