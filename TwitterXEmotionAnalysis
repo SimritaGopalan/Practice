@@ -1,0 +1,35 @@
+## installing packages and importing dataset
+install.packages("tidyverse")
+library(tidyverse)
+tweetsFrame <- read_csv("text.csv")
+
+##making a table and dataframe from the file
+countLabel <- table(tweetsFrame$label)
+countsFrame <- data.frame(countLabel)
+colnames(countsFrame)[1] <- "label"
+countsFrame$textLabel <- c("Sadness", "Joy", "Love", 
+                           "Anger", "Fear", "Suprise")
+
+#making a frequency plot
+countsPlot <- ggplot(data = countsFrame, 
+              mapping = aes(x = textLabel, y = Freq)) +
+  geom_col(mapping = aes(fill = textLabel)) +
+  geom_text(label = countsFrame$Freq) +
+  labs(title = "Numbers of Emotion-coded Tweets", 
+       subtitle = "out of 416,809 tweets", 
+       xlab = "Emotions", 
+       ylab = "Frequency")
+
+## making a dataframe to see how many times 
+## certain words show up in the data
+countEmotions <- data.frame(emotions = c("sad", "happy", "love",
+                 "angry", "afraid", "surprise"))
+countEmotions$count <- sapply(countEmotions$emotions, function(x) 
+                    sum(grepl(x, tweetsFrame$text, ignore.case = T)))
+
+## making a plot of the counted words frequencies
+emotionPlot <- ggplot(data = countEmotions, 
+                mapping = aes(x = emotions, y = count)) +
+  geom_col(mapping = aes(fill = emotions)) +
+  geom_text(label = countEmotions$count) +
+  labs(title = "Count of Emotional Words in Tweets")
