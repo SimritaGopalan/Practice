@@ -1,0 +1,76 @@
+---
+title: "Twitter/X Emotions Analysis"
+author: "Simrita Gopalan"
+date: "2024-02-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("tidyverse")
+library(tidyverse)
+library(knitr)
+tweetsFrame <- read.csv("text.csv")
+countLabel <- table(tweetsFrame$label)
+countsFrame <- data.frame(countLabel)
+colnames(countsFrame)[1] <- "label"
+countsFrame$textLabel <- c("Sadness", "Joy", "Love", 
+                           "Anger", "Fear", "Suprise")
+```
+
+# Emotions On Twitter/X
+
+## Objective
+
+I found a dataset on Kaggle by NIDULA ELGIRIYEWITHANA called 'Emotions: Where Words Paint the Colors of Feelings' that categorized over 400,000 tweets into different emotional categories. I wanted to see what emotional categories were most commonly expressed on this social media platform. The data set has 6 categories, numbered 0-5: Sadness, Joy, Love, Anger, Fear, and Surprise. 
+
+## Hypothesis
+
+I hypothesized that the category of Sadness would be the most prominent, as many people may primarily use twitter as a place to vent, as it can be used anonymously. Also because it is text based, unlike other social media platforms that are more image based, there would not be as much content of moments that people wanted to capture.
+
+## Results
+
+In the plot below it can be seen that the emotional category with the most entries was Joy, with Sadness as a close second. 
+
+```{r cars, echo = FALSE}
+countsPlot <- ggplot(data = countsFrame, 
+              mapping = aes(x = textLabel, y = Freq)) +
+  geom_col(mapping = aes(fill = textLabel)) +
+  geom_text(label = countsFrame$Freq) +
+  labs(title = "Numbers of Emotion-coded Tweets", 
+       subtitle = "out of 416,809 tweets", 
+       xlab = "Emotions", 
+       ylab = "Frequency")
+plot(countsPlot)
+```
+
+However, I also decided to look at how many times the specific words (in action form) appeared in the tweets themselves.
+
+In the table and plot below, it can be seen that the word "love" vastly out represents the other categories. The others are more similar to each other, with the second highest of "happy" being over 10,000 occurrences less than "love"
+
+
+```{r pressure, echo = FALSE}
+countEmotions <- data.frame(emotions = c("sad", "happy", "love",
+                 "angry", "afraid", "surprise"))
+countEmotions$count <- sapply(countEmotions$emotions, function(x) 
+                    sum(grepl(x, tweetsFrame$text, ignore.case = T)))
+emotionsPlot <- ggplot(data = countEmotions, 
+                mapping = aes(x = emotions, y = count)) +
+  geom_col(mapping = aes(fill = emotions)) +
+  geom_text(label = countEmotions$count) +
+  labs(title = "Count of Emotional Words in Tweets")
+kable(countEmotions)
+plot(emotionsPlot)
+```
+
+## Discussion
+
+Based on the results, my hypothesis was incorrect. In terms of categorization into categories, Joy was the most prevalent, and in terms of appearance of emotional action words, love was the most.
+
+#### Limitations
+
+However, there are flaws in my approach. I have no way of verifying if the dataset is unbiased in anyway, or is a randomized pool of tweets. There is no was to show why people post joyful things more than sad things. Joy and Sadness tend to be more widespread emotions than the other options. And the word "love" is a very standard word used in many contexts, where there are multiple words that can be used in place of "happy", "sad", etc., that may have appeared in the tweets but were not acknowledged.
+
+## Conclusion
+
+In conclusion, it seems like twitter users most often post about joyful thoughts and experiences, followed by sad ones. However, the word that most appeared in the sample was attributed to a different category. Twitter is a place to post an individuals thoughts and experiences, so there will be a variety of what shows up on your timeline.
